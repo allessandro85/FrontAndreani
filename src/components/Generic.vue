@@ -9,15 +9,6 @@
                 </q-card-section>
             </div>
             <div class="q-pa-md" style="color: rgb(165, 139, 139);">
-              <!-- <div class="row text-center q-mt-xl" v-if="fieldTypeNumber">
-                   <div class="col-4">
-                       <q-input filled v-model="numerador" label="Usuario" />
-                   </div>
-
-                   <div class="col-4">
-                       <q-input filled v-model="denominador" label="Contraseña" />
-                   </div>
-               </div> -->
                <div>
                     <div class="q-ma-md col-4">
                         <q-input filled v-model="usuario" label="Usuario" />
@@ -25,33 +16,11 @@
                     </div>
                 </div>
           </div>
-
-          <!-- <div class="col-12">
-               <div class="row">
-                   <div class="col-4"></div>
-                   <div class="col-4">
-                       <q-input filled label="Resultado" readonly v-model="resultado" />
-                   </div>
-                   <div class="col-4"> </div>
-               </div>
-           </div> -->
-
-           <!-- <div class="row text-center">
-            <div class="col-12 text-h6 q-mb-md q-mt-md">
-                {{texto}}
-            </div>
-           </div> -->
-
-          <div class="col-12 text-center q-mt-xl">
-               <div class="row">
-                   <div class="col-4">
-                       <q-btn color="positive" text-color="white" label="Ingresar" @click="GetData" cleareable></q-btn>
-                   </div>
-                   <div class="col-4">
-                       <q-btn color="info" text-color="white" label="Registrarse" cleareable></q-btn>
-                   </div>
-               </div>
-           </div>
+          <div class="row text-center q-mt-xl">
+              <div class="col-12">
+                  <q-btn color="positive" text-color="white" label="Ingresar" @click="GetData" cleareable></q-btn>
+              </div>
+          </div>
         </q-card>
    </div>
 </template>
@@ -63,23 +32,26 @@ export default {
    name: 'Generic',
    data(){
        return{
-          //  numerador: null,
-          //  denominador: null,
-          //  resultado: null,
+           resultado: null,
            usuario: null,
-           contraseña: null,
-           error: true,
-          //  url: null
+           contraseña: null
        }
    },
    methods: {
         async GetDataApi(){
-            this.error = false;
-            this.url = "https://localhost:7041/Usuario/Login?usuario=" + this.usuario +`&contraseña=`+ this.contraseña +``;
+            // this.url = "https://localhost:7198/Usuario/ValidarUsuario?usuario=" + this.usuario +`&contraseña=`+ this.contraseña +``;
+            this.url = "https://localhost:7198/Usuario/ValidarUsuario?usuario=" + this.usuario +``;
 
-            await axios.get(this.url)
-            .then(done =>{
-                this.resultado = done.data;
+            await axios.post(this.url)
+            .then(response =>{
+                if(response.data){
+                  // localStorage.setItem('Token',response.data);
+                  // axios.defaults.headers.common['Autorization'] = 'Bearer' + response.data;
+                  this.$router.push('/Menu');
+                }
+            })
+            .catch(error =>{
+              this.SendNotification("No autorizado", "negative");
             })
         },
        GetData(){
