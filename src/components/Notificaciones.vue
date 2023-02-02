@@ -1,21 +1,20 @@
 <template>
-  <q-page padding >
-    <q-card class="my-card bg-warning" v-if="SinNotificaciones">
-      <q-card-section class="text-center">
-        <div class="text-h6">No Posee Notificaciones</div>
-      </q-card-section>
-
-    </q-card>
-    <q-card class="my-card bg-secondary" v-else>
-      <q-card-section>
-        <div class="text-h6 text-center">Notificacion</div>
-      </q-card-section>
-
-      <q-card-section>
-        <div class="text-subtitle2"> estas serian las notificaciones </div>
-      </q-card-section>
-    </q-card>
-  </q-page>
+  <div>
+    <div class="q-ma-xl" v-if="SinNotificaciones">
+      <q-card class="my-card bg-warning">
+        <q-card-section class="text-center">
+          <div class="text-h6">No Posee Notificaciones</div>
+        </q-card-section>
+      </q-card>
+    </div>
+    <div class="q-ma-xl" v-else>
+      <q-card class="q-mb-xl my-card bg-warning" v-for="(item, index) in notificacionesDisponibles" :key="index">
+        <q-card-section>
+          <div class="text-h6 text-center">{{ item }}</div>
+        </q-card-section>
+      </q-card>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -27,7 +26,11 @@ export default {
    data(){
     return {
       drawer: ref(false),
-      SinNotificaciones : false
+      SinNotificaciones : false,
+      notificacionesDisponibles: [
+      'Notificacion1', 'Notificacion1', 'Notificacion1', 'Notificacion1', 'Notificacion1', 'Notificacion1',
+      'Notificacion1', 'Notificacion1', 'Notificacion1','Notificacion1', 'Notificacion1','Notificacion1'
+      ],
     }
    },
    methods: {

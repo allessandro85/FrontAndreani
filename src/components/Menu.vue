@@ -46,13 +46,13 @@
               </q-item-section>
             </q-item>
 
-            <q-item clickable v-ripple>
+            <q-item clickable v-ripple @click="SetOption('Logout')">
               <q-item-section avatar>
                 <q-icon name="drafts" />
               </q-item-section>
 
               <q-item-section>
-                Logout
+                Salir
               </q-item-section>
 
             </q-item>
@@ -74,46 +74,6 @@
         <mis-turnos v-if="selectOption == 'MisTurnos'"></mis-turnos>
         <solicitar-turnos v-if="selectOption == 'SolicitarTurnos'"></solicitar-turnos>
         <notificaciones v-if="selectOption == 'Notificaciones'"></notificaciones>
-        <!-- <q-page padding v-if="false">
-          <q-card class="my-card bg-secondary text-white">
-          <q-card-section>
-            <div class="text-h6">Our Changing Planet</div>
-            <div class="text-subtitle2">by John Doe</div>
-          </q-card-section>
-
-          <q-card-section>
-            {{ lorem }}
-          </q-card-section>
-
-          <q-separator dark />
-
-          <q-card-actions>
-            <q-btn flat>Action 1</q-btn>
-            <q-btn flat>Action 2</q-btn>
-          </q-card-actions>
-        </q-card>
-        </q-page>
-
-        <q-page padding v-else>
-          <q-card class="my-card bg-secondary text-white">
-          <q-card-section>
-            <div class="text-h6">Our Changing Planet2</div>
-            <div class="text-subtitle2">by John Doe</div>
-          </q-card-section>
-
-          <q-card-section>
-            {{ lorem }}
-          </q-card-section>
-
-          <q-separator dark />
-
-          <q-card-actions>
-            <q-btn flat>Action 1</q-btn>
-            <q-btn flat>Action 2</q-btn>
-          </q-card-actions>
-        </q-card>
-        </q-page> -->
-
       </q-page-container>
     </q-layout>
   </div>
@@ -136,9 +96,22 @@ export default {
     }
    },
    methods: {
-    SetOption(algo){
-      this.selectOption = algo;
-    }
+    SetOption(option){
+      if(option == "Logout"){
+        localStorage.removeItem("Token");
+        this.SendNotification("Salio correctamente", "positive");
+        this.$router.push('/');
+      }
+      this.selectOption = option;
+    },
+    SendNotification(mensaje, color){
+      this.$q.notify({
+          message: mensaje,
+          type: color,
+          position: "top",
+          group: false,
+      });
+    },
   }
 }
 </script>

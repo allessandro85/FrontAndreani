@@ -27,6 +27,7 @@
 
 <script>
 import axios from 'axios'
+import config  from '../statics/config';
 
 export default {
    name: 'Generic',
@@ -34,25 +35,38 @@ export default {
        return{
            resultado: null,
            usuario: null,
-           contraseña: null
+           contraseña: null,
+           url : config.API_URL
        }
    },
    methods: {
         async GetDataApi(){
-            // this.url = "https://localhost:7198/Usuario/ValidarUsuario?usuario=" + this.usuario +`&contraseña=`+ this.contraseña +``;
-            this.url = "https://localhost:7198/Usuario/ValidarUsuario?usuario=" + this.usuario +``;
-
-            await axios.post(this.url)
+            await axios.post(this.url + "Token/CreateToken?usuario=" + this.usuario +`&pass=`+ this.contraseña +``)
             .then(response =>{
                 if(response.data){
-                  // localStorage.setItem('Token',response.data);
-                  // axios.defaults.headers.common['Autorization'] = 'Bearer' + response.data;
-                  this.$router.push('/Menu');
+                  localStorage.setItem('Token', response.data.tokencreado);
+                  axios.defaults.headers.common['Autorization'] = 'Bearer' + response.data.tokencreado;
+                  this.ValidarUsuario();
                 }
             })
             .catch(error =>{
               this.SendNotification("No autorizado", "negative");
             })
+        },
+        ValidarUsuario(){
+          var token = localStorage.getItem('Token');
+          const config = {
+              headers: { Authorization: `Bearer ${token}` }
+          };
+          axios.post(this.url +"Usuario/ValidarUsuario?usuario=" + this.usuario +`&pass=`+ this.contraseña +``, config)
+          .then(response =>{
+              if(response.data){
+                this.$router.push('/Menu');
+              }
+          })
+          .catch(error =>{
+            this.SendNotification("No autorizado", "negative");
+          })
         },
        GetData(){
           if(this.usuario != null && this.contraseña != null){
